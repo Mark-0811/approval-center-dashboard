@@ -115,7 +115,7 @@ class ApprovalRequest(models.Model):
         if not any(source.search([('id', '=', source.id)] + rule._status_domain('pending'))):
             raise UserError(_('The source request is no longer pending.'))
         result = getattr(source, method_name)()
-        self.env['approval.center.rule'].sync_all()
+        self.env['approval.center.rule'].sudo().sync_all()
         return result if isinstance(result, dict) else True
 
     @api.model
@@ -147,3 +147,34 @@ class ApprovalRequest(models.Model):
         view = self.env['ir.ui.view'].search([('model', '=', source._name), ('type', '=', 'form')], limit=1)
         return {'type': 'ir.actions.act_window', 'name': request.name, 'res_model': source._name,
                 'res_id': source.id, 'view_mode': 'form', 'views': [(view.id if view else False, 'form')]}
+
+    @api.model
+    def form_get_approval_context(self, model_name, record_id):
+        if not model_name or not record_id or model_name not in self.env:
+            return False
+        rules = self.env['approval.center.rule'].search([
+            ('model_name', '=', model_name), ('active', '=', True),
+        ], order='sequence,id')
+        if not rules:
+            return False
+        source = self.env[model_name].browse(int(record_id)).exists()
+        if not source:
+            return False
+        source.check_access_rights('read')
+        source.check_access_rule('read')
+        requests = self.search([
+            ('rule_id', 'in', rules.ids), ('source_model', '=', model_name),
+            ('source_res_id', '=', source.id),
+        ])
+        results = []
+        for rule in rules:
+            request = requests.filtered(lambda item: item.rule_id == rule)[:1]
+            results.append({
+                'request_id': request.id if request else False,
+                'reference': request.name if request else source.display_name,
+                'rule': rule.name, 'status': request.status if request else False,
+                'purpose': request.purpose if request else '',
+                'can_decide': bool(request and request.status == 'pending' and self.env.user in request.approver_ids),
+                'can_comment': 'message_ids' in source._fields,
+            })
+        return results

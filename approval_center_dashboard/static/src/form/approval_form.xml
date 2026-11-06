@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="approval_center_dashboard.FormApprovalPanel" t-inherit="web.FormView" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[@t-set-slot='control-panel-actions']" position="inside">
+            <section t-if="this.approvalPanel.context" t-foreach="this.approvalPanel.context" t-as="approval" t-key="approval.rule" class="o_ac_form_approval_panel">
+                <div class="o_ac_form_approval_info">
+                    <i class="fa fa-check-circle"/>
+                    <span><strong t-esc="approval.rule"/><small><t t-esc="approval.reference"/> · <t t-esc="approval.status || 'Approval required'"/></small></span>
+                </div>
+                <div t-if="approval.can_decide" class="o_ac_form_approval_actions">
+                    <button class="btn btn-success btn-sm" t-on-click="() => this.runApprovalDecision(approval, 'approved')">Approve</button>
+                    <button class="btn btn-danger btn-sm" t-on-click="() => this.runApprovalDecision(approval, 'rejected')">Reject</button>
+                </div>
+                <div t-if="approval.request_id and approval.can_comment" class="o_ac_form_comment">
+                    <input type="text" class="form-control form-control-sm" placeholder="Add a comment" t-model="this.approvalPanel.comment"/>
+                    <button class="btn btn-outline-secondary btn-sm" t-on-click="() => this.postFormApprovalComment(approval)">Comment + Email</button>
+                </div>
+            </section>
+        </xpath>
+    </t>
+</templates>

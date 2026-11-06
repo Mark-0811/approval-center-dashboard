@@ -1,0 +1,4 @@
+.o_ac_form_approval_panel { display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:8px 12px;margin:0 8px;border:1px solid #dce4ec;border-radius:8px;background:#f8fafc; }
+.o_ac_form_approval_info { display:flex;align-items:center;gap:8px;color:#5d4560; }.o_ac_form_approval_info small { display:block;color:#718096;font-size:11px; }
+.o_ac_form_approval_actions,.o_ac_form_comment { display:flex;align-items:center;gap:6px; }.o_ac_form_comment input { width:180px; }
+@media(max-width:800px){.o_ac_form_approval_panel{margin:8px 0}.o_ac_form_comment{width:100%}.o_ac_form_comment input{flex:1}}

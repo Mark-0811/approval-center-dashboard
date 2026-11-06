@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dashboard_category_user,approval dashboard category user,model_dex_approval_dashboard_category,base.group_user,1,0,0,0
+access_dashboard_category_manager,approval dashboard category manager,model_dex_approval_dashboard_category,dex_approval_dashboard.group_approval_dashboard_manager,1,1,1,1
+access_dashboard_type_user,approval dashboard type user,model_dex_approval_dashboard_type,base.group_user,1,0,0,0
+access_dashboard_type_manager,approval dashboard type manager,model_dex_approval_dashboard_type,dex_approval_dashboard.group_approval_dashboard_manager,1,1,1,1
+access_dashboard_action_user,approval dashboard action user,model_dex_approval_dashboard_action,base.group_user,1,0,0,0
+access_dashboard_action_manager,approval dashboard action manager,model_dex_approval_dashboard_action,dex_approval_dashboard.group_approval_dashboard_manager,1,1,1,1
+access_dashboard_item_user,approval dashboard item user,model_dex_approval_dashboard_item,base.group_user,1,0,0,0
+access_dashboard_item_manager,approval dashboard item manager,model_dex_approval_dashboard_item,dex_approval_dashboard.group_approval_dashboard_manager,1,1,1,1

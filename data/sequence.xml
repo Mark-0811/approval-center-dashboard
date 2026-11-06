@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="sequence_approval_dashboard_item" model="ir.sequence">
+            <field name="name">Approval Dashboard Request</field>
+            <field name="code">dex_approval_dashboard.item</field>
+            <field name="prefix">APR/</field>
+            <field name="padding">6</field>
+        </record>
+    </data>
+</odoo>

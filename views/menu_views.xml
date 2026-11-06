@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="menu_approval_dashboard_root"
+                  name="Approval Center"
+                  action="action_approval_center_dashboard"
+                  web_icon="base,static/description/board.png"
+                  sequence="12"
+                  groups="base.group_user"/>
+
+        <menuitem id="menu_approval_dashboard"
+                  name="Dashboard"
+                  parent="menu_approval_dashboard_root"
+                  action="action_approval_center_dashboard"
+                  sequence="10"/>
+
+        <menuitem id="menu_approval_dashboard_my_items"
+                  name="My Approvals"
+                  parent="menu_approval_dashboard_root"
+                  action="action_approval_dashboard_my_items"
+                  sequence="20"/>
+
+        <menuitem id="menu_approval_dashboard_items"
+                  name="Approval Requests"
+                  parent="menu_approval_dashboard_root"
+                  action="action_approval_dashboard_items"
+                  sequence="30"/>
+
+        <menuitem id="menu_approval_dashboard_configuration"
+                  name="Configuration"
+                  parent="menu_approval_dashboard_root"
+                  sequence="90"
+                  groups="dex_approval_dashboard.group_approval_dashboard_manager"/>
+
+        <menuitem id="menu_approval_dashboard_types"
+                  name="Approval Functions"
+                  parent="menu_approval_dashboard_configuration"
+                  action="action_approval_dashboard_types"
+                  sequence="10"/>
+
+        <menuitem id="menu_approval_dashboard_categories"
+                  name="Categories"
+                  parent="menu_approval_dashboard_configuration"
+                  action="action_approval_dashboard_categories"
+                  sequence="20"/>
+    </data>
+</odoo>

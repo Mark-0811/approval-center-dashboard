@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_approval_center_dashboard" model="ir.actions.client">
+            <field name="name">Approval Center</field>
+            <field name="tag">dex_approval_dashboard.dashboard</field>
+        </record>
+    </data>
+</odoo>

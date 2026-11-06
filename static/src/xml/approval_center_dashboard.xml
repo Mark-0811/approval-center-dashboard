@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="DexApprovalCenterDashboard">
+        <div class="o_dex_approval_center">
+            <header class="o_dex_approval_header">
+                <div><h2>Approval Center</h2><p>One place to review, comment on, and decide approval requests.</p></div>
+                <button type="button" class="btn btn-light o_dex_refresh"><i class="fa fa-refresh"/> Refresh</button>
+            </header>
+            <nav class="o_dex_tabs">
+                <button type="button" class="active" data-tab="approvals"><i class="fa fa-list-alt"/> Approvals</button>
+                <button type="button" data-tab="analytics"><i class="fa fa-bar-chart"/> Analytics</button>
+                <button type="button" class="o_dex_config_tab" data-tab="configuration"><i class="fa fa-cog"/> Configuration</button>
+            </nav>
+            <main class="o_dex_tab_body">
+                <section class="o_dex_approvals_tab">
+                    <div class="o_dex_process_container"/>
+                    <div class="o_dex_quick_filters">
+                        <button class="active" data-quick="my"><i class="fa fa-user"/> For My Approval</button>
+                        <button data-quick="overdue"><i class="fa fa-clock-o"/> Overdue</button>
+                        <button data-quick="today"><i class="fa fa-check-circle"/> Approved Today</button>
+                        <button data-quick="rejected"><i class="fa fa-times-circle"/> Rejected</button>
+                        <button data-quick="priority"><i class="fa fa-exclamation-triangle"/> High Priority</button>
+                    </div>
+                    <section class="o_dex_queue_panel">
+                        <div class="o_dex_toolbar">
+                            <div class="o_dex_search_wrap"><i class="fa fa-search"/><input type="search" class="form-control o_dex_search" placeholder="Search reference, requester, purpose, customer..."/></div>
+                            <button class="btn btn-light o_dex_toggle_filters"><i class="fa fa-sliders"/> Filters</button>
+                            <select class="form-control o_dex_type_filter"><option value="">All approval functions</option></select>
+                            <select class="form-control o_dex_status_filter">
+                                <option value="">All statuses</option><option value="pending">Pending</option>
+                                <option value="approved">Approved</option><option value="rejected">Rejected</option><option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="o_dex_advanced_filters"/>
+                        <div class="o_dex_filter_chips"/>
+                        <div class="o_dex_selection_bar"/>
+                        <div class="o_dex_table_container"/>
+                    </section>
+                </section>
+                <section class="o_dex_analytics_tab d-none"/>
+                <section class="o_dex_configuration_tab d-none"/>
+            </main>
+            <div class="o_dex_drawer_host"/>
+        </div>
+    </t>
+
+    <t t-name="DexApprovalCenterProcesses">
+        <div class="o_dex_process_bar">
+            <button t-attf-class="o_dex_process #{!selected_category_id ? 'active' : ''}" data-category-id="0">
+                <span class="o_dex_process_icon"><i class="fa fa-th-large"/></span><span><strong>All Approvals</strong><small>All functions</small></span><b><t t-esc="data.all_count"/></b>
+            </button>
+            <t t-foreach="data.categories" t-as="category">
+                <button t-attf-class="o_dex_process o_dex_color_#{category.color || 0} #{selected_category_id === category.id ? 'active' : ''}" t-att-data-category-id="category.id">
+                    <span class="o_dex_process_icon"><i class="fa fa-check-square-o"/></span><span><strong><t t-esc="category.name"/></strong><small>Pending for you</small></span><b><t t-esc="category.count"/></b>
+                </button>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="DexApprovalCenterAdvancedFilters">
+        <div t-attf-class="o_dex_filter_grid #{open ? '' : 'd-none'}">
+            <t t-call="DexApprovalCenterFilterSelect"><t t-set="label">Department</t><t t-set="name">department</t><t t-set="values" t-value="options.departments || []"/></t>
+            <t t-call="DexApprovalCenterFilterSelect"><t t-set="label">Requester</t><t t-set="name">requester</t><t t-set="values" t-value="options.requesters || []"/></t>
+            <t t-call="DexApprovalCenterFilterSelect"><t t-set="label">Approver</t><t t-set="name">approver</t><t t-set="values" t-value="options.approvers || []"/></t>
+            <t t-call="DexApprovalCenterFilterSelect"><t t-set="label">Stage</t><t t-set="name">stage</t><t t-set="values" t-value="options.stages || []"/></t>
+            <t t-call="DexApprovalCenterFilterSelect"><t t-set="label">Customer</t><t t-set="name">customer</t><t t-set="values" t-value="options.customers || []"/></t>
+            <t t-call="DexApprovalCenterFilterSelect"><t t-set="label">Project</t><t t-set="name">project</t><t t-set="values" t-value="options.projects || []"/></t>
+            <t t-call="DexApprovalCenterFilterSelect"><t t-set="label">Site</t><t t-set="name">site</t><t t-set="values" t-value="options.sites || []"/></t>
+            <label>Priority<select class="form-control o_dex_advanced_filter" data-filter="priority"><option value="">All priorities</option><option value="normal">Normal</option><option value="high">High</option><option value="urgent">Urgent</option></select></label>
+            <label>Date From<input type="date" class="form-control o_dex_advanced_filter" data-filter="date_from"/></label>
+            <label>Date To<input type="date" class="form-control o_dex_advanced_filter" data-filter="date_to"/></label>
+            <div class="o_dex_filter_commands"><button class="btn btn-primary o_dex_apply_filters">Apply</button><button class="btn btn-link o_dex_clear_filters">Clear</button></div>
+        </div>
+    </t>
+
+    <t t-name="DexApprovalCenterFilterSelect">
+        <label><t t-esc="label"/><select class="form-control o_dex_advanced_filter" t-att-data-filter="name"><option value="">All</option><t t-foreach="values" t-as="value"><option t-att-value="value"><t t-esc="value"/></option></t></select></label>
+    </t>
+
+    <t t-name="DexApprovalCenterChips">
+        <t t-if="state.assigned_only"><button class="o_dex_filter_chip" data-remove-filter="assigned_only">For My Approval <i class="fa fa-times"/></button></t>
+        <t t-if="state.status"><button class="o_dex_filter_chip" data-remove-filter="status"><t t-esc="title(state.status)"/> <i class="fa fa-times"/></button></t>
+        <t t-foreach="advanced" t-as="filter"><button class="o_dex_filter_chip" t-att-data-remove-filter="filter.key"><t t-esc="filter.label"/>: <t t-esc="filter.value"/> <i class="fa fa-times"/></button></t>
+    </t>
+
+    <t t-name="DexApprovalCenterSelectionBar">
+        <t t-if="count">
+            <div class="o_dex_selection_content"><strong><t t-esc="count"/> selected</strong><span t-if="message" class="text-warning"><t t-esc="message"/></span><div>
+                <button t-if="approve" class="btn btn-success btn-sm o_dex_multi_action" t-att-data-action-id="approve.id"><i class="fa fa-check"/> Approve Selected</button>
+                <button t-if="reject" class="btn btn-danger btn-sm o_dex_multi_action" t-att-data-action-id="reject.id"><i class="fa fa-times"/> <t t-esc="reject.name"/> Selected</button>
+                <button class="btn btn-link btn-sm o_dex_clear_selection">Clear</button>
+            </div></div>
+        </t>
+    </t>
+
+    <t t-name="DexApprovalCenterTable">
+        <div class="table-responsive"><table class="table table-hover o_dex_approval_table"><thead><tr>
+            <th><input type="checkbox" class="o_dex_select_page" t-att-checked="page_selected ? 'checked' : undefined"/></th>
+            <th class="o_dex_col_reference"><button class="o_dex_sort" data-sort="name">Reference <i class="fa fa-sort"/></button></th>
+            <th class="o_dex_col_function">Category / Function</th><th class="o_dex_col_requester">Requester</th>
+            <th><button class="o_dex_sort" data-sort="request_date">Date Requested <i class="fa fa-sort"/></button></th>
+            <th><button class="o_dex_sort" data-sort="request_age_days">Request Age <i class="fa fa-sort"/></button></th>
+            <th class="o_dex_col_responsible">Responsible</th><th>Status</th><th class="o_dex_col_purpose">Purpose / Remarks</th><th class="o_dex_col_actions">Actions</th>
+        </tr></thead><tbody>
+            <tr t-if="!data.rows.length"><td colspan="10" class="o_dex_empty_state"><i class="fa fa-inbox"/><strong>No approval requests found</strong><span>Adjust the filters or select another process.</span></td></tr>
+            <t t-foreach="data.rows" t-as="row"><tr t-attf-class="#{selected[row.id] ? 'o_dex_selected' : ''}">
+                <td><input type="checkbox" class="o_dex_select_row" t-att-data-item-id="row.id" t-att-checked="selected[row.id] ? 'checked' : undefined"/></td>
+                <td class="o_dex_col_reference"><button class="o_dex_request_link o_dex_open_drawer" t-att-data-item-id="row.id"><t t-esc="row.name"/></button></td>
+                <td class="o_dex_col_function"><strong><t t-esc="row.category"/></strong><small><t t-esc="row.approval_type"/></small></td>
+                <td class="o_dex_col_requester"><t t-esc="row.requester_name || '—'"/></td><td class="text-nowrap"><t t-esc="formatDate(row.request_date)"/></td>
+                <td><t t-esc="formatAge(row.request_age_days)"/></td>
+                <td class="o_dex_col_responsible"><t t-esc="row.assigned_users || '—'"/></td><td><span t-attf-class="o_dex_status_badge o_status_#{row.status}"><t t-esc="row.status_label"/></span></td>
+                <td class="o_dex_purpose o_dex_col_purpose"><span><t t-esc="row.purpose || row.remarks || '—'"/></span></td>
+                <td class="o_dex_row_actions o_dex_col_actions"><div class="o_dex_action_group"><t t-foreach="row.actions" t-as="action"><button t-attf-class="btn btn-sm o_dex_execute_action o_intent_#{action.intent}" t-att-data-item-id="row.id" t-att-data-action-id="action.id"><t t-esc="action.name"/></button></t>
+                    <button t-if="row.comment_available" class="btn btn-sm o_dex_comment" t-att-data-item-id="row.id"><i class="fa fa-comment-o"/> Comment</button>
+                    <button class="btn btn-sm o_dex_open_drawer" t-att-data-item-id="row.id"><i class="fa fa-list-alt"/> Details</button></div>
+                </td>
+            </tr></t>
+        </tbody></table></div>
+        <footer class="o_dex_pager"><span>Showing <t t-esc="data.total ? ((data.page - 1) * data.page_size + 1) : 0"/>–<t t-esc="Math.min(data.page * data.page_size, data.total)"/> of <t t-esc="data.total"/></span><div><button class="btn btn-light btn-sm o_dex_prev" t-att-disabled="data.page &lt;= 1 ? 'disabled' : undefined"><i class="fa fa-chevron-left"/></button><span>Page <t t-esc="data.page"/> of <t t-esc="data.page_count"/></span><button class="btn btn-light btn-sm o_dex_next" t-att-disabled="data.page &gt;= data.page_count ? 'disabled' : undefined"><i class="fa fa-chevron-right"/></button></div></footer>
+    </t>
+
+    <t t-name="DexApprovalCenterDrawer">
+        <div class="o_dex_drawer_backdrop o_dex_close_drawer"/><aside class="o_dex_drawer"><header><div><small><t t-esc="row.category"/> · <t t-esc="row.approval_type"/></small><h3><t t-esc="row.name"/></h3></div><button class="o_dex_close_drawer"><i class="fa fa-times"/></button></header>
+            <div class="o_dex_drawer_body"><div class="o_dex_detail_grid">
+                <div><small>Requester</small><strong><t t-esc="row.requester_name || '—'"/></strong></div><div><small>Date Requested</small><strong><t t-esc="formatDate(row.request_date)"/></strong></div>
+                <div><small>Request Age</small><strong><t t-esc="formatAge(row.request_age_days)"/></strong></div>
+                <div t-if="row.department"><small>Department</small><strong><t t-esc="row.department"/></strong></div><div t-if="row.stage"><small>Current Stage</small><strong><t t-esc="row.stage"/></strong></div>
+                <div><small>Responsible</small><strong><t t-esc="row.assigned_users || '—'"/></strong></div><div t-if="row.next_approver"><small>Next Approver</small><strong><t t-esc="row.next_approver"/></strong></div>
+            </div><section t-if="row.purpose || row.remarks"><h4>Purpose / Remarks</h4><p><t t-esc="row.purpose || row.remarks"/></p></section>
+            <section><h4>Activity</h4><div class="o_dex_history"><p t-if="!row.messages.length" class="text-muted">No chatter messages yet.</p><t t-foreach="row.messages" t-as="message"><article><strong><t t-esc="message.author"/></strong><small><t t-esc="formatDate(message.date)"/></small><p><t t-esc="message.body"/></p></article></t></div></section></div>
+            <footer><button class="btn btn-light o_dex_open_request" t-att-data-item-id="row.id"><i class="fa fa-external-link"/> Open Request</button><button t-if="row.comment_available" class="btn btn-primary o_dex_comment" t-att-data-item-id="row.id"><i class="fa fa-comment-o"/> Comment</button></footer>
+        </aside>
+    </t>
+
+    <t t-name="DexApprovalCenterAnalytics">
+        <header><div><h3>Approval Analytics</h3><p>Based on the current process and dashboard filters.</p></div><button class="btn btn-light o_dex_refresh_analytics"><i class="fa fa-refresh"/> Refresh</button></header>
+        <div class="o_dex_metric_cards"><div><small>Pending</small><strong><t t-esc="pending"/></strong></div><div><small>On Track</small><strong><t t-esc="data.aging.normal"/></strong></div><div><small>Needs Attention</small><strong><t t-esc="data.aging.attention"/></strong></div><div class="danger"><small>Overdue</small><strong><t t-esc="data.aging.overdue"/></strong></div></div>
+        <div class="o_dex_analytics_grid"><t t-call="DexApprovalCenterChart"><t t-set="title">Pending by Category</t><t t-set="rows" t-value="data.pending_by_category"/></t><t t-call="DexApprovalCenterChart"><t t-set="title">Pending by Department</t><t t-set="rows" t-value="data.pending_by_department"/></t><t t-call="DexApprovalCenterChart"><t t-set="title">Average Turnaround (days)</t><t t-set="rows" t-value="data.turnaround"/></t><t t-call="DexApprovalCenterChart"><t t-set="title">Completed by Approver</t><t t-set="rows" t-value="data.completed_by_approver"/></t></div>
+    </t>
+    <t t-name="DexApprovalCenterChart"><section class="o_dex_chart"><h4><t t-esc="title"/></h4><p t-if="!rows.length" class="text-muted">No data for the current filters.</p><t t-foreach="rows" t-as="row"><div class="o_dex_bar_row"><span><t t-esc="row[0]"/></span><div><i t-att-style="'width:' + barWidth(row[1], rows) + '%'"/></div><b><t t-esc="row[1]"/></b></div></t></section></t>
+
+    <t t-name="DexApprovalCenterConfiguration">
+        <header><div><h3>Approval Configuration</h3><p>Configured functions, mappings, actions, and aging thresholds.</p></div><button class="btn btn-primary o_dex_open_configuration"><i class="fa fa-cog"/> Manage Configuration</button></header>
+        <div class="table-responsive"><table class="table"><thead><tr><th>Category</th><th>Approval Function</th><th>Actions</th><th>Mapped Fields</th><th>Attention</th><th>Overdue</th></tr></thead><tbody><t t-foreach="data.rows" t-as="row"><tr><td><t t-esc="row.category"/></td><td><strong><t t-esc="row.name"/></strong></td><td><t t-esc="row.action_count"/></td><td><t t-esc="row.mapping_count"/></td><td><t t-esc="row.attention_days"/> days</td><td><t t-esc="row.overdue_days"/> days</td></tr></t></tbody></table></div>
+    </t>
+</templates>

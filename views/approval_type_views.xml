@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_approval_dashboard_type_kanban" model="ir.ui.view">
+            <field name="name">dex_approval_dashboard.type.kanban</field>
+            <field name="model">dex_approval_dashboard.type</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="category_id" class="o_kanban_dashboard o_approval_dashboard">
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="pending_count"/>
+                    <field name="approved_count"/>
+                    <field name="rejected_count"/>
+                    <field name="cancelled_count"/>
+                    <field name="total_count"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card o_kanban_record o_approval_center_card">
+                                <div class="o_approval_center_header">
+                                    <div class="o_approval_center_icon">
+                                        <i class="fa fa-check-square-o" title="Approval"/>
+                                    </div>
+                                    <div class="o_approval_center_title">
+                                        <strong><field name="name"/></strong>
+                                        <span><field name="total_count"/> total requests</span>
+                                    </div>
+                                </div>
+                                <div class="o_approval_center_statuses">
+                                    <a type="object" name="action_open_pending" class="o_approval_status_row o_status_pending">
+                                        <span><i class="fa fa-clock-o"/> Pending</span>
+                                        <strong><field name="pending_count"/></strong>
+                                    </a>
+                                    <a type="object" name="action_open_approved" class="o_approval_status_row o_status_approved">
+                                        <span><i class="fa fa-check-circle-o"/> Approved</span>
+                                        <strong><field name="approved_count"/></strong>
+                                    </a>
+                                    <a type="object" name="action_open_rejected" class="o_approval_status_row o_status_rejected">
+                                        <span><i class="fa fa-times-circle-o"/> Rejected</span>
+                                        <strong><field name="rejected_count"/></strong>
+                                    </a>
+                                    <a type="object" name="action_open_cancelled" class="o_approval_status_row o_status_cancelled">
+                                        <span><i class="fa fa-ban"/> Cancelled</span>
+                                        <strong><field name="cancelled_count"/></strong>
+                                    </a>
+                                </div>
+                                <div class="o_approval_center_footer">
+                                    <a type="object" name="action_open_all">
+                                        View all requests <i class="fa fa-arrow-right"/>
+                                    </a>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_approval_dashboard_type_tree" model="ir.ui.view">
+            <field name="name">dex_approval_dashboard.type.tree</field>
+            <field name="model">dex_approval_dashboard.type</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="model_name"/>
+                    <field name="pending_count"/>
+                    <field name="approved_count"/>
+                    <field name="rejected_count"/>
+                    <field name="last_sync"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_approval_dashboard_type_form" model="ir.ui.view">
+            <field name="name">dex_approval_dashboard.type.form</field>
+            <field name="model">dex_approval_dashboard.type</field>
+            <field name="arch" type="xml">
+                <form string="Approval Function">
+                    <header>
+                        <button name="action_sync" type="object" string="Refresh Index" class="btn-primary"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                                <field name="category_id"/>
+                                <field name="sequence"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <field name="model_id" options="{'no_create': 1}"/>
+                                <field name="model_name" readonly="1"/>
+                                <field name="menu_id" options="{'no_create': 1}"/>
+                                <field name="action_id" options="{'no_create': 1}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Status Mapping">
+                                <div class="alert alert-info" role="alert">
+                                    Configure the source model domains that represent each dashboard status.
+                                    These domains organize records only; the source module still performs approval actions.
+                                </div>
+                                <group>
+                                    <field name="pending_domain" widget="domain" options="{'model': 'model_name'}"/>
+                                    <field name="approved_domain" widget="domain" options="{'model': 'model_name'}"/>
+                                    <field name="rejected_domain" widget="domain" options="{'model': 'model_name'}"/>
+                                    <field name="cancelled_domain" widget="domain" options="{'model': 'model_name'}"/>
+                                    <field name="extra_domain" widget="domain" options="{'model': 'model_name'}"/>
+                                </group>
+                            </page>
+                            <page string="Display Fields">
+                                <div class="alert alert-info" role="alert">
+                                    Optional mappings populate the centralized queue and request drawer.
+                                    Missing mappings display a dash and do not block the source workflow.
+                                </div>
+                                <group>
+                                    <group>
+                                        <field name="name_field_id" domain="[('model_id', '=', model_id)]" options="{'no_create': 1}"/>
+                                        <field name="date_field_id" domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]" options="{'no_create': 1}"/>
+                                        <field name="stage_date_field_id" domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]" options="{'no_create': 1}"/>
+                                        <field name="decision_date_field_id" domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]" options="{'no_create': 1}"/>
+                                        <field name="department_field_id" domain="[('model_id', '=', model_id)]" options="{'no_create': 1}"/>
+                                        <field name="customer_field_id" domain="[('model_id', '=', model_id)]" options="{'no_create': 1}"/>
+                                        <field name="project_field_id" domain="[('model_id', '=', model_id)]" options="{'no_create': 1}"/>
+                                        <field name="site_field_id" domain="[('model_id', '=', model_id)]" options="{'no_create': 1}"/>
+                                    </group>
+                                    <group>
+                                        <field name="requester_field_id" domain="[('model_id', '=', model_id), ('ttype', 'in', ('many2one', 'many2many'))]" options="{'no_create': 1}"/>
+                                        <field name="approver_field_id" domain="[('model_id', '=', model_id), ('ttype', 'in', ('many2one', 'many2many'))]" options="{'no_create': 1}"/>
+                                        <field name="next_approver_field_id" domain="[('model_id', '=', model_id)]" options="{'no_create': 1}"/>
+                                        <field name="stage_field_id" domain="[('model_id', '=', model_id)]" options="{'no_create': 1}"/>
+                                        <field name="amount_field_id" domain="[('model_id', '=', model_id), ('ttype', 'in', ('integer', 'float', 'monetary'))]" options="{'no_create': 1}"/>
+                                        <field name="currency_field_id" domain="[('model_id', '=', model_id), ('ttype', '=', 'many2one'), ('relation', '=', 'res.currency')]" options="{'no_create': 1}"/>
+                                        <field name="purpose_field_id" domain="[('model_id', '=', model_id), ('ttype', 'in', ('char', 'text', 'html'))]" options="{'no_create': 1}"/>
+                                        <field name="remarks_field_id" domain="[('model_id', '=', model_id), ('ttype', 'in', ('char', 'text', 'html'))]" options="{'no_create': 1}"/>
+                                    </group>
+                                </group>
+                                <group string="Service Level Aging">
+                                    <field name="attention_days"/>
+                                    <field name="overdue_days"/>
+                                </group>
+                            </page>
+                            <page string="Responsibility">
+                                <group>
+                                    <field name="responsible_user_ids" widget="many2many_tags"/>
+                                    <field name="responsible_group_ids" widget="many2many_tags"/>
+                                </group>
+                            </page>
+                            <page string="Dashboard Actions">
+                                <div class="alert alert-info" role="alert">
+                                    Actions run the source workflow as the logged-in user.
+                                    Only configure trusted public methods or existing wizard actions.
+                                </div>
+                                <field name="dashboard_action_ids" context="{'default_approval_type_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="key"/>
+                                        <field name="intent"/>
+                                        <field name="execution_type"/>
+                                        <field name="method_name" attrs="{'invisible':[('execution_type','!=','method')]}"/>
+                                        <field name="window_action_id" attrs="{'invisible':[('execution_type','!=','window_action')]}" options="{'no_create': 1}"/>
+                                        <field name="active"/>
+                                    </tree>
+                                    <form string="Dashboard Action">
+                                        <field name="source_model_id" invisible="1"/>
+                                        <field name="source_model_name" invisible="1"/>
+                                        <group>
+                                            <group>
+                                                <field name="name"/>
+                                                <field name="key"/>
+                                                <field name="sequence"/>
+                                                <field name="intent"/>
+                                                <field name="active"/>
+                                            </group>
+                                            <group>
+                                                <field name="execution_type"/>
+                                                <field name="method_name" attrs="{'required':[('execution_type','=','method')], 'invisible':[('execution_type','!=','method')]}"/>
+                                                <field name="window_action_id" attrs="{'required':[('execution_type','=','window_action')], 'invisible':[('execution_type','!=','window_action')]}" options="{'no_create': 1}"/>
+                                                <field name="reason_field_id" domain="[('model_id', '=', source_model_id), ('ttype', 'in', ('char', 'text'))]" options="{'no_create': 1}"/>
+                                            </group>
+                                        </group>
+                                        <group>
+                                            <field name="availability_domain" widget="domain" options="{'model': 'source_model_name'}"/>
+                                            <field name="group_ids" widget="many2many_tags"/>
+                                            <field name="confirm_message"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Synchronization">
+                                <group>
+                                    <field name="last_sync"/>
+                                    <field name="sync_error"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_approval_dashboard_type_search" model="ir.ui.view">
+            <field name="name">dex_approval_dashboard.type.search</field>
+            <field name="model">dex_approval_dashboard.type</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="model_id"/>
+                    <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_category" string="Category" context="{'group_by': 'category_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_approval_dashboard" model="ir.actions.act_window">
+            <field name="name">Approval Center</field>
+            <field name="res_model">dex_approval_dashboard.type</field>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="view_approval_dashboard_type_kanban"/>
+            <field name="domain">[('active', '=', True)]</field>
+            <field name="context">{'group_by': 'category_id'}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Configure an approval function to add it to the dashboard.</p>
+            </field>
+        </record>
+
+        <record id="action_approval_dashboard_types" model="ir.actions.act_window">
+            <field name="name">Approval Functions</field>
+            <field name="res_model">dex_approval_dashboard.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

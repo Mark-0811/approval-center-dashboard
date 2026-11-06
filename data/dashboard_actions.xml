@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <function model="dex_approval_dashboard.action" name="seed_default_actions"/>
+    </data>
+</odoo>

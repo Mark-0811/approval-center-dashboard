@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="approval_center_dashboard.Main">
+        <div class="o_approval_center_dashboard">
+            <header class="o_ac_header"><div><h1>Approval Center</h1><p>Review and track approval requests across your configured workflows.</p></div><button class="btn btn-secondary" t-on-click="load"><i class="fa fa-refresh"/> Refresh</button></header>
+            <div class="o_ac_categories">
+                <button t-att-class="state.selectedCategory ? 'o_ac_category' : 'o_ac_category active'" t-on-click="() => this.chooseCategory(false)"><strong>All Approvals</strong><span t-esc="state.all_count || 0"/></button>
+                <t t-foreach="state.categories" t-as="category" t-key="category.id"><button t-att-class="state.selectedCategory === category.id ? 'o_ac_category active' : 'o_ac_category'" t-on-click="() => this.chooseCategory(category.id)"><strong t-esc="category.name"/><span t-esc="category.count"/></button></t>
+            </div>
+            <section class="o_ac_panel">
+                <div class="o_ac_toolbar"><input class="form-control" type="search" placeholder="Search reference, requester, or purpose" t-on-input="onSearch"/><select class="form-select" t-on-change="onStatus"><option value="pending" selected="selected">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="cancelled">Cancelled</option><option value="">All statuses</option></select><label><input type="checkbox" checked="checked" t-on-change="toggleMine"/> Assigned to me</label></div>
+                <div class="table-responsive"><table class="table table-hover o_ac_table"><thead><tr><th>Reference</th><th>Category / Function</th><th>Requester</th><th>Date Requested</th><th>Responsible</th><th>Status</th><th>Purpose / Remarks</th><th>Actions</th></tr></thead>
+                    <tbody><tr t-if="state.loading"><td colspan="8" class="text-center">Loading approvals…</td></tr><tr t-elif="!state.rows.length"><td colspan="8" class="text-center text-muted py-5">No approval requests found.</td></tr>
+                    <t t-foreach="state.rows" t-as="row" t-key="row.id"><tr><td><button class="btn btn-link p-0" t-on-click="() => this.openSource(row)" t-esc="row.name"/></td><td><strong t-esc="row.category"/><small t-esc="row.rule"/></td><td t-esc="row.requester || '—'"/><td t-esc="row.date || '—'"/><td t-esc="row.approvers || '—'"/><td><span class="badge rounded-pill text-bg-warning" t-esc="row.status"/></td><td class="o_ac_purpose" t-esc="row.purpose || '—'"/><td><div class="o_ac_actions"><button t-if="row.can_decide" class="btn btn-sm btn-success" t-on-click="() => this.decide(row, 'approved')">Approve</button><button t-if="row.can_decide" class="btn btn-sm btn-danger" t-on-click="() => this.decide(row, 'rejected')">Reject</button><button t-if="row.can_comment" class="btn btn-sm btn-outline-secondary" t-on-click="() => this.startComment(row)">Comment</button><button class="btn btn-sm btn-outline-primary" t-on-click="() => this.openSource(row)">Open</button></div></td></tr></t></tbody>
+                </table></div>
+                <footer class="o_ac_pager"><span><t t-esc="state.total"/> requests · page <t t-esc="state.page"/> / <t t-esc="state.pages"/></span><div><button class="btn btn-secondary btn-sm" t-att-disabled="state.page &lt;= 1" t-on-click="() => this.pageBy(-1)">Previous</button><button class="btn btn-secondary btn-sm" t-att-disabled="state.page &gt;= state.pages" t-on-click="() => this.pageBy(1)">Next</button></div></footer>
+            </section>
+            <div t-if="state.commentRequest" class="o_ac_modal_backdrop"><section class="o_ac_modal"><h2>Comment on <t t-esc="state.commentRequest.name"/></h2><p t-esc="state.commentRequest.rule"/><textarea class="form-control" rows="5" t-model="state.comment" placeholder="Write your comment…"/><label class="o_ac_email"><input type="checkbox" t-model="state.emailRequester"/> Email the requester</label><footer><button class="btn btn-secondary" t-on-click="() => state.commentRequest = false">Cancel</button><button class="btn btn-primary" t-on-click="postComment">Post Comment</button></footer></section></div>
+        </div>
+    </t>
+</templates>

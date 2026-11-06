@@ -1,0 +1,7 @@
+<odoo>
+    <menuitem id="menu_approval_root" name="Approval Center" sequence="35"/>
+    <menuitem id="menu_approval_dashboard" name="Dashboard" parent="menu_approval_root" action="action_dashboard" sequence="1"/>
+    <menuitem id="menu_approval_config" name="Configuration" parent="menu_approval_root" groups="approval_center_dashboard.group_approval_manager" sequence="90"/>
+    <menuitem id="menu_approval_categories" name="Categories" parent="menu_approval_config" action="action_categories" sequence="1"/>
+    <menuitem id="menu_approval_rules" name="Approval Rules" parent="menu_approval_config" action="action_rules" sequence="2"/>
+</odoo>

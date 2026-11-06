@@ -1,0 +1,20 @@
+<odoo>
+    <record id="view_category_list" model="ir.ui.view">
+        <field name="name">approval.center.category.list</field><field name="model">approval.center.category</field>
+        <field name="arch" type="xml"><list><field name="sequence" widget="handle"/><field name="name"/><field name="active"/></list></field>
+    </record>
+    <record id="view_category_form" model="ir.ui.view">
+        <field name="name">approval.center.category.form</field><field name="model">approval.center.category</field>
+        <field name="arch" type="xml"><form><sheet><group><field name="name"/><field name="sequence"/><field name="color"/><field name="active"/></group><field name="rule_ids"><list><field name="sequence"/><field name="name"/><field name="model_id"/><field name="active"/></list></field></sheet></form></field>
+    </record>
+    <record id="view_rule_list" model="ir.ui.view">
+        <field name="name">approval.center.rule.list</field><field name="model">approval.center.rule</field>
+        <field name="arch" type="xml"><list><field name="sequence" widget="handle"/><field name="name"/><field name="category_id"/><field name="model_id"/><field name="last_sync"/><field name="sync_error" widget="text"/><field name="active"/></list></field>
+    </record>
+    <record id="view_rule_form" model="ir.ui.view">
+        <field name="name">approval.center.rule.form</field><field name="model">approval.center.rule</field>
+        <field name="arch" type="xml"><form><header><button name="sync_all" type="object" string="Refresh Index" class="btn-primary"/></header><sheet><group><group><field name="name"/><field name="code"/><field name="category_id"/><field name="sequence"/><field name="active"/></group><group><field name="model_id"/><field name="menu_id"/><field name="approver_user_ids" widget="many2many_tags"/><field name="approver_group_ids" widget="many2many_tags"/></group></group><notebook><page string="Status Domains"><group><field name="pending_domain"/><field name="approved_domain"/><field name="rejected_domain"/><field name="cancelled_domain"/></group></page><page string="Display Fields"><group><field name="name_field_id"/><field name="date_field_id"/><field name="requester_field_id"/><field name="approver_field_id"/><field name="purpose_field_id"/></group></page><page string="Decision Methods"><group><field name="approve_method"/><field name="reject_method"/></group></page><page string="Sync Status"><group><field name="last_sync"/><field name="sync_error"/></group></page></notebook></sheet></form></field>
+    </record>
+    <record id="action_categories" model="ir.actions.act_window"><field name="name">Categories</field><field name="res_model">approval.center.category</field><field name="view_mode">list,form</field></record>
+    <record id="action_rules" model="ir.actions.act_window"><field name="name">Approval Rules</field><field name="res_model">approval.center.rule</field><field name="view_mode">list,form</field></record>
+</odoo>

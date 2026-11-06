@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_category_user,approval.center.category user,model_approval_center_category,base.group_user,1,0,0,0
+access_rule_user,approval.center.rule user,model_approval_center_rule,base.group_user,1,0,0,0
+access_request_user,approval.center.request user,model_approval_center_request,base.group_user,1,0,0,0
+access_category_manager,approval.center.category manager,model_approval_center_category,approval_center_dashboard.group_approval_manager,1,1,1,1
+access_rule_manager,approval.center.rule manager,model_approval_center_rule,approval_center_dashboard.group_approval_manager,1,1,1,1
+access_request_manager,approval.center.request manager,model_approval_center_request,approval_center_dashboard.group_approval_manager,1,1,1,1

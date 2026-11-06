@@ -1,0 +1,10 @@
+<odoo>
+    <record id="ir_cron_sync_approval_requests" model="ir.cron">
+        <field name="name">Refresh Approval Center Index</field>
+        <field name="model_id" ref="model_approval_center_rule"/>
+        <field name="state">code</field>
+        <field name="code">model.sync_all()</field>
+        <field name="interval_number">10</field><field name="interval_type">minutes</field>
+        <field name="active">True</field>
+    </record>
+</odoo>
